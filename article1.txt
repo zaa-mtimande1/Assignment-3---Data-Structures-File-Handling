@@ -1,0 +1,1 @@
+Machine learning is a branch of artificial intelligence that focuses on building systems that can learn from data. It is widely used in applications such as image recognition, natural language processing, and recommendation systems.
