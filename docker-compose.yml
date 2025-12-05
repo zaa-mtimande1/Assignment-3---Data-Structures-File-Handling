@@ -1,34 +1,20 @@
-# docker-compose.yml
 services:
-  qdrant:
-    image: qdrant/qdrant:latest
-    container_name: qdrant
-    restart: unless-stopped
-    ports:
-      - "6333:6333" # HTTP
-      - "6334:6334" # gRPC
-    volumes:
-      - ./qdrant_storage:/qdrant/storage
-
   mariadb:
     image: mariadb:10.11
     container_name: assignment_mariadb
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: example_root_pw
+      MYSQL_DATABASE: example_db
+      MYSQL_USER: example_user
+      MYSQL_PASSWORD: example_pw
     ports:
-      - "3307:3306"
+      - '3307:3306' # Changed host port to 3307 to avoid conflicts
     volumes:
-      - ./mariadb_data:/var/lib/mysql
-
-  mongodb:
-    image: mongo:6.0
-    container_name: assignment_mongodb
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./mongodb_data:/data/db
+      - ./db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
